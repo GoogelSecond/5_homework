@@ -2,14 +2,12 @@ package com.example.a5_homework
 
 import android.Manifest
 import android.os.Bundle
-import android.provider.ContactsContract
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import com.example.a5_homework.databinding.ContactListFragmentBinding
-import kotlin.properties.Delegates
 
 
 class ContactListFragment : Fragment(R.layout.contact_list_fragment) {
@@ -47,8 +45,7 @@ class ContactListFragment : Fragment(R.layout.contact_list_fragment) {
     }
 
     private fun onReadAndWriteContactsPermissionsGranted() {
-        val contactList = ContactHelper.getContactList(requireContext())
-        val eewr  = 1
+        val contactList = ContactHelper.getContacts(requireContext().contentResolver)
     }
 }
 

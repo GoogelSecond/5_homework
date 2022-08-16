@@ -1,56 +1,43 @@
 package com.example.a5_homework
 
-import android.content.Context
+import android.content.ContentResolver
 import android.provider.ContactsContract
-import android.provider.ContactsContract.*
-import kotlin.properties.Delegates
+import android.provider.ContactsContract.CommonDataKinds
 
 object ContactHelper {
 
+    fun getContacts(contentResolver: ContentResolver): List<ContactModel> {
+        val uri = ContactsContract.Data.CONTENT_URI
+        val projection = arrayOf(
+            CommonDataKinds.StructuredName.CONTACT_ID,
+            CommonDataKinds.StructuredName.GIVEN_NAME,
+            CommonDataKinds.StructuredName.FAMILY_NAME
+        )
+        val selection = "${ContactsContract.Data.MIMETYPE}=?"
+        val selectionArgs = arrayOf(CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE)
 
-    fun getContactList(context: Context): List<ContactModel> {
+        val nameCursor = contentResolver.query(uri, projection, selection, selectionArgs, null)
 
         val result = mutableListOf<ContactModel>()
 
-        val nameCursor = context.contentResolver.query(
-            CommonDataKinds.Phone.CONTENT_URI,
-            null,
-            null,
-            null,
-            null
-        )
-
-        var id = ""
-        var name = ""
-        var phoneNumber = ""
-
-        var idIndex by Delegates.notNull<Int>()
-        var nameIndex by Delegates.notNull<Int>()
-        var numberIndex by Delegates.notNull<Int>()
-
         nameCursor?.let { cursor ->
-            idIndex = cursor.getColumnIndex(CommonDataKinds.Phone.CONTACT_ID)
-            nameIndex = cursor.getColumnIndex(CommonDataKinds.Phone.DISPLAY_NAME)
-            numberIndex = cursor.getColumnIndex(CommonDataKinds.Phone.NUMBER)
+            var id: String
+            var firstName: String
+            var lastName: String
+            var phoneNumber: String
 
             while (cursor.moveToNext()) {
-                if (idIndex > 0) {
-                    id = cursor.getString(idIndex)
-                }
-                if (nameIndex > 0) {
-                    name = cursor.getString(nameIndex)
-                }
-                if (numberIndex > 0) {
-                    phoneNumber = cursor.getString(numberIndex)
-                }
+                id = cursor.getString(0)
+                firstName = cursor.getString(1)
+                lastName = cursor.getString(2)
 
-                // TODO: will fix bag
-                val spaceIndex = name.trim().indexOf(SEPARATOR)
+                phoneNumber = getPhoneNumber(id, contentResolver)
+
                 result.add(
                     ContactModel(
                         id = id,
-                        firstName = name.substring(0, spaceIndex),
-                        lastName = name.substring(spaceIndex, name.length),
+                        firstName = firstName,
+                        lastName = lastName,
                         number = phoneNumber
                     )
                 )
@@ -61,5 +48,24 @@ object ContactHelper {
         return result
     }
 
-    private const val SEPARATOR = " "
+    private fun getPhoneNumber(id: String, contentResolver: ContentResolver): String {
+
+        val uri = CommonDataKinds.Phone.CONTENT_URI
+        val projection = arrayOf(CommonDataKinds.Phone.NUMBER)
+        val selection = "${CommonDataKinds.Phone.CONTACT_ID}=?"
+        val selectionArgs = arrayOf(id)
+
+        val phoneCursor = contentResolver.query(uri, projection, selection, selectionArgs, null)
+
+        phoneCursor?.let { cursor ->
+            if (cursor.moveToNext()) {
+                return cursor.getString(0)
+            }
+            cursor.close()
+        }
+
+        return EMPTY_STRING
+    }
+
+    private const val EMPTY_STRING = ""
 }

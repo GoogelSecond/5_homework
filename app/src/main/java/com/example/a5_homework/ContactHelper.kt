@@ -36,9 +36,9 @@ object ContactHelper {
                 result.add(
                     ContactModel(
                         id = id,
-                        firstName = firstName,
-                        lastName = lastName,
-                        number = phoneNumber
+                        firstName = checkBlankString(firstName),
+                        lastName = checkBlankString(lastName),
+                        number = checkBlankString(phoneNumber)
                     )
                 )
             }
@@ -46,6 +46,13 @@ object ContactHelper {
             cursor.close()
         }
         return result
+    }
+
+    private fun checkBlankString(string: String): String {
+        if (string.isNotBlank()) {
+            return string
+        }
+        return BANK_STRING_MESSAGE
     }
 
     private fun getPhoneNumber(id: String, contentResolver: ContentResolver): String {
@@ -68,4 +75,5 @@ object ContactHelper {
     }
 
     private const val EMPTY_STRING = ""
+    private const val BANK_STRING_MESSAGE = "is absent"
 }

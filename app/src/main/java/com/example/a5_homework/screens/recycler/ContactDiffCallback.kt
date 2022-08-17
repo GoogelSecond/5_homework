@@ -1,7 +1,7 @@
-package com.example.a5_homework.recycler
+package com.example.a5_homework.screens.recycler
 
 import androidx.recyclerview.widget.DiffUtil
-import com.example.a5_homework.ContactModel
+import com.example.a5_homework.model.ContactModel
 
 class ContactDiffCallback: DiffUtil.ItemCallback<ContactModel>() {
     override fun areItemsTheSame(oldItem: ContactModel, newItem: ContactModel): Boolean {

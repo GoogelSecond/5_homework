@@ -2,9 +2,9 @@ package com.example.a5_homework
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.ContactsContract
 import androidx.fragment.app.commit
-import kotlin.properties.Delegates
+import com.example.a5_homework.screens.ContactEditFragment
+import com.example.a5_homework.screens.ContactListFragment
 
 class MainActivity : AppCompatActivity(), Navigator {
     override fun onCreate(savedInstanceState: Bundle?) {

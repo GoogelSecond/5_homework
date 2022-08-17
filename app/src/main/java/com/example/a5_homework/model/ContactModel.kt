@@ -1,4 +1,4 @@
-package com.example.a5_homework
+package com.example.a5_homework.model
 
 data class ContactModel(
     val id: String = "",

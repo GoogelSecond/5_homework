@@ -1,9 +1,9 @@
-package com.example.a5_homework.recycler
+package com.example.a5_homework.screens.recycler
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
-import com.example.a5_homework.ContactModel
+import com.example.a5_homework.model.ContactModel
 import com.example.a5_homework.R
 
 class ContactAdapter(private val onContactClickListener: (id: String) -> Unit) :

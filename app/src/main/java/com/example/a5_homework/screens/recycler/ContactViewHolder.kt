@@ -1,8 +1,8 @@
-package com.example.a5_homework.recycler
+package com.example.a5_homework.screens.recycler
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import com.example.a5_homework.ContactModel
+import com.example.a5_homework.model.ContactModel
 import com.example.a5_homework.databinding.ContactItemBinding
 
 class ContactViewHolder(view: View) : RecyclerView.ViewHolder(view) {

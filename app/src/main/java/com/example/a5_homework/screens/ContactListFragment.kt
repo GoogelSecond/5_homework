@@ -1,4 +1,4 @@
-package com.example.a5_homework
+package com.example.a5_homework.screens
 
 import android.Manifest
 import android.os.Bundle
@@ -7,8 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import com.example.a5_homework.ContactHelper
+import com.example.a5_homework.R
 import com.example.a5_homework.databinding.ContactListFragmentBinding
-import com.example.a5_homework.recycler.ContactAdapter
+import com.example.a5_homework.navigator
+import com.example.a5_homework.screens.recycler.ContactAdapter
 
 
 class ContactListFragment : Fragment(R.layout.contact_list_fragment) {

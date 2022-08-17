@@ -4,6 +4,7 @@ import android.content.ContentProviderOperation
 import android.content.ContentResolver
 import android.provider.ContactsContract
 import android.provider.ContactsContract.CommonDataKinds
+import com.example.a5_homework.model.ContactModel
 import java.util.ArrayList
 
 object ContactHelper {

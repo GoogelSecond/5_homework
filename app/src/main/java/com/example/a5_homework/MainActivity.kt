@@ -16,13 +16,21 @@ class MainActivity : AppCompatActivity(), Navigator {
     }
 
     override fun openEditScreen(id: String) {
-        TODO("Not yet implemented")
+        supportFragmentManager.commit {
+            setReorderingAllowed(true)
+            addToBackStack(null)
+            replace(R.id.fragment_container, ContactEditFragment.newInstance(id))
+        }
     }
 
     override fun openListScreen() {
         supportFragmentManager.commit {
             setReorderingAllowed(true)
-            replace(R.id.fragment_container, ContactListFragment())
+            replace(R.id.fragment_container, ContactListFragment.newInstance())
         }
+    }
+
+    override fun popBackstack() {
+       supportFragmentManager.popBackStack()
     }
 }

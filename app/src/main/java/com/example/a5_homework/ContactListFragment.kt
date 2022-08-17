@@ -45,7 +45,8 @@ class ContactListFragment : Fragment(R.layout.contact_list_fragment) {
     private fun setupRecycler() {
         val recycler = binding.recyclerView
         contactAdapter = ContactAdapter { id ->
-            Snackbar.make(binding.root, id, Snackbar.LENGTH_LONG).show()
+//            Snackbar.make(binding.root, id, Snackbar.LENGTH_LONG).show()
+            navigator().openEditScreen(id)
         }
         recycler.adapter = contactAdapter
     }
@@ -59,6 +60,12 @@ class ContactListFragment : Fragment(R.layout.contact_list_fragment) {
     private fun onReadAndWriteContactsPermissionsGranted() {
         val contactList = ContactHelper.getContacts(requireContext().contentResolver)
         contactAdapter.submitList(contactList)
+    }
+
+    companion object {
+        fun newInstance(): ContactListFragment {
+            return ContactListFragment()
+        }
     }
 }
 

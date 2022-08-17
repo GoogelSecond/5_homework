@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/tv_first_name_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/first_name_title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/et_first_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="8dp"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:inputType="text"
+        app:layout_constraintBottom_toBottomOf="@id/tv_first_name_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tv_first_name_title"
+        app:layout_constraintTop_toTopOf="@id/tv_first_name_title"
+        tools:text="First name"
+        android:autofillHints="name" />
+
+    <TextView
+        android:id="@+id/tv_last_name_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/last_name_title"
+        app:layout_constraintStart_toStartOf="@id/tv_first_name_title"
+        app:layout_constraintTop_toBottomOf="@id/tv_first_name_title" />
+
+    <EditText
+        android:id="@+id/et_last_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="8dp"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:inputType="text"
+        app:layout_constraintBottom_toBottomOf="@id/tv_last_name_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tv_last_name_title"
+        app:layout_constraintTop_toTopOf="@id/tv_last_name_title"
+        tools:text="Last name"
+        android:autofillHints="name" />
+
+    <TextView
+        android:id="@+id/tv_phone_number_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/phone_number_title"
+        app:layout_constraintStart_toStartOf="@id/tv_first_name_title"
+        app:layout_constraintTop_toBottomOf="@id/tv_last_name_title" />
+
+    <EditText
+        android:id="@+id/et_phone_number"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="8dp"
+        android:textColor="@color/black"
+        android:inputType="phone"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@id/tv_phone_number_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tv_phone_number_title"
+        app:layout_constraintTop_toTopOf="@id/tv_phone_number_title"
+        tools:text="123456789"
+        android:autofillHints="phone" />
+
+    <Button
+        android:id="@+id/button_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/save_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_phone_number_title" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

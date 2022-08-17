@@ -11,4 +11,6 @@ interface Navigator {
     fun openEditScreen(id: String)
 
     fun openListScreen()
+
+    fun popBackstack()
 }

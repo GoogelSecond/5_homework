@@ -9,7 +9,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import com.example.a5_homework.databinding.ContactListFragmentBinding
 import com.example.a5_homework.recycler.ContactAdapter
-import com.google.android.material.snackbar.Snackbar
 
 
 class ContactListFragment : Fragment(R.layout.contact_list_fragment) {
@@ -45,7 +44,6 @@ class ContactListFragment : Fragment(R.layout.contact_list_fragment) {
     private fun setupRecycler() {
         val recycler = binding.recyclerView
         contactAdapter = ContactAdapter { id ->
-//            Snackbar.make(binding.root, id, Snackbar.LENGTH_LONG).show()
             navigator().openEditScreen(id)
         }
         recycler.adapter = contactAdapter
@@ -68,4 +66,3 @@ class ContactListFragment : Fragment(R.layout.contact_list_fragment) {
         }
     }
 }
-

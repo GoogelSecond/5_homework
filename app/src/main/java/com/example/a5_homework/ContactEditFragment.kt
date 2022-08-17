@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.a5_homework.databinding.ContactEditFragmentBinding
-import com.google.android.material.snackbar.Snackbar
 
 
 class ContactEditFragment : Fragment(R.layout.contact_list_fragment) {
@@ -29,13 +28,25 @@ class ContactEditFragment : Fragment(R.layout.contact_list_fragment) {
         val id = args.getString(KEY_ID)
 
         id?.let {
-            Snackbar.make(binding.root, id, Snackbar.LENGTH_LONG).show()
-
+            val contactModel = ContactHelper.getContactById(it, requireContext().contentResolver)
+            binding.etFirstName.setText(contactModel.firstName)
+            binding.etLastName.setText(contactModel.lastName)
+            binding.etPhoneNumber.setText(contactModel.number)
         }
 
         binding.buttonSave.setOnClickListener {
-            navigator().popBackstack()
-            navigator().openListScreen()
+            id?.let { id ->
+                ContactHelper.updateContact(
+                    ContactModel(
+                        id = id,
+                        firstName = binding.etFirstName.text.toString(),
+                        lastName = binding.etLastName.text.toString(),
+                        number = binding.etPhoneNumber.text.toString()
+                    ), requireContext().contentResolver
+                )
+                navigator().popBackstack()
+                navigator().openListScreen()
+            }
         }
     }
 

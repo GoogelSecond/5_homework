@@ -1,8 +1,10 @@
 package com.example.a5_homework
 
+import android.content.ContentProviderOperation
 import android.content.ContentResolver
 import android.provider.ContactsContract
 import android.provider.ContactsContract.CommonDataKinds
+import java.util.ArrayList
 
 object ContactHelper {
 
@@ -46,6 +48,80 @@ object ContactHelper {
             cursor.close()
         }
         return result
+    }
+
+    fun getContactById(id: String, contentResolver: ContentResolver): ContactModel {
+        val uri = ContactsContract.Data.CONTENT_URI
+        val projection = arrayOf(
+            CommonDataKinds.StructuredName.GIVEN_NAME,
+            CommonDataKinds.StructuredName.FAMILY_NAME
+        )
+        val selection =
+            "${ContactsContract.Data.CONTACT_ID}=? AND ${ContactsContract.Data.MIMETYPE}=?"
+        val selectionArgs = arrayOf(id, CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE)
+
+        val nameCursor = contentResolver.query(uri, projection, selection, selectionArgs, null)
+
+        var contactModel = ContactModel()
+
+        nameCursor?.let { cursor ->
+            if (cursor.moveToNext()) {
+                val firstName = cursor.getString(0)
+                val lastName = cursor.getString(1)
+
+                val phoneNumber = getPhoneNumber(id, contentResolver)
+
+                contactModel = ContactModel(
+                    id = id,
+                    firstName = checkBlankString(firstName),
+                    lastName = checkBlankString(lastName),
+                    number = checkBlankString(phoneNumber)
+                )
+            }
+
+            cursor.close()
+        }
+        return contactModel
+    }
+
+    fun updateContact(contactModel: ContactModel, contentResolver: ContentResolver) {
+
+        val ops = ArrayList<ContentProviderOperation>()
+
+        val phoneSelection =
+            "${ContactsContract.Data.CONTACT_ID}=? AND ${ContactsContract.Data.MIMETYPE}=? AND ${CommonDataKinds.Phone.TYPE}=?"
+        val nameSelection =
+            "${ContactsContract.Data.CONTACT_ID}=? AND ${ContactsContract.Data.MIMETYPE}=?"
+
+        val phoneSelectionArgs = arrayOf(
+            contactModel.id,
+            CommonDataKinds.Phone.CONTENT_ITEM_TYPE,
+            CommonDataKinds.Phone.TYPE_MOBILE.toString()
+        )
+        val nameSelectionArgs = arrayOf(
+            contactModel.id,
+            CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE,
+        )
+        ops.add(
+            ContentProviderOperation.newUpdate(ContactsContract.Data.CONTENT_URI)
+                .withSelection(phoneSelection, phoneSelectionArgs)
+                .withValue(CommonDataKinds.Phone.NUMBER, contactModel.number)
+                .build()
+        )
+        ops.add(
+            ContentProviderOperation.newUpdate(ContactsContract.Data.CONTENT_URI)
+                .withSelection(nameSelection, nameSelectionArgs)
+                .withValue(CommonDataKinds.StructuredName.GIVEN_NAME, contactModel.firstName)
+                .build()
+        )
+        ops.add(
+            ContentProviderOperation.newUpdate(ContactsContract.Data.CONTENT_URI)
+                .withSelection(nameSelection, nameSelectionArgs)
+                .withValue(CommonDataKinds.StructuredName.FAMILY_NAME, contactModel.lastName)
+                .build()
+        )
+
+        contentResolver.applyBatch(ContactsContract.AUTHORITY, ops)
     }
 
     private fun checkBlankString(string: String): String {

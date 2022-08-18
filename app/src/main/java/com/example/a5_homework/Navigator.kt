@@ -8,9 +8,13 @@ fun Fragment.navigator(): Navigator {
 
 interface Navigator {
 
-    fun openEditScreen(id: String)
+    fun openEditScreenOnePanelMode(id: String)
+
+    fun openEditScreenTwoPanelMode(id: String)
 
     fun openListScreen()
+
+    fun isOnePanelMode(): Boolean
 
     fun popBackstack()
 }

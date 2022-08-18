@@ -54,7 +54,11 @@ class ContactListFragment : Fragment(R.layout.contact_list_fragment) {
     private fun setupRecycler() {
         val recycler = binding.recyclerView
         contactAdapter = ContactAdapter { id ->
-            navigator().openEditScreen(id)
+            if (navigator().isOnePanelMode()) {
+                navigator().openEditScreenOnePanelMode(id)
+            } else {
+                navigator().openEditScreenTwoPanelMode(id)
+            }
         }
         recycler.adapter = contactAdapter
     }

@@ -28,8 +28,8 @@ class ContactEditFragment : Fragment(R.layout.contact_list_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val args = requireArguments()
-        val id = args.getString(KEY_ID)
+        val args = arguments
+        val id = args?.getString(KEY_ID)
 
         id?.let {
             val contactModel = ContactHelper.getContactById(it, requireContext().contentResolver)

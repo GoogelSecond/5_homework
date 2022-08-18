@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">5_homework</string>
+    <string name="first_name_title">First Name:</string>
+    <string name="last_name_title">Last name:</string>
+    <string name="phone_number_title">Phone number:</string>
+    <string name="save_button">save</string>
+    <string name="contact_list_is_empty_message">Contact list is empty</string>
+    <string name="try_again_button">load contacts</string>
 </resources>

@@ -12,6 +12,6 @@ class ContactViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     fun bind(contactModel: ContactModel) {
         binding.tvFirstName.text = contactModel.firstName
         binding.tvLastName.text = contactModel.lastName
-        binding.tvPhoneNumber.text = contactModel.number
+        binding.tvPhoneNumber.text = contactModel.phoneNumber
     }
 }

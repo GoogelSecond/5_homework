@@ -4,5 +4,5 @@ data class ContactModel(
     val id: String = "",
     val firstName: String = "",
     val lastName: String = "",
-    val number: String = ""
+    val phoneNumber: String = ""
 )

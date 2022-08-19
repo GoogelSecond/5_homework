@@ -35,7 +35,7 @@ class ContactEditFragment : Fragment(R.layout.contact_list_fragment) {
             val contactModel = ContactHelper.getContactById(it, requireContext().contentResolver)
             binding.etFirstName.setText(contactModel.firstName)
             binding.etLastName.setText(contactModel.lastName)
-            binding.etPhoneNumber.setText(contactModel.number)
+            binding.etPhoneNumber.setText(contactModel.phoneNumber)
         }
 
         binding.buttonSave.setOnClickListener {
@@ -45,7 +45,7 @@ class ContactEditFragment : Fragment(R.layout.contact_list_fragment) {
                         id = id,
                         firstName = binding.etFirstName.text.toString(),
                         lastName = binding.etLastName.text.toString(),
-                        number = binding.etPhoneNumber.text.toString()
+                        phoneNumber = binding.etPhoneNumber.text.toString()
                     ), requireContext().contentResolver
                 )
                 navigator().popBackstack()

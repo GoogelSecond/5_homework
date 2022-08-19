@@ -11,28 +11,61 @@
         android:layout_height="wrap_content"
         android:text="@string/contact_list_is_empty_message"
         android:textColor="@color/black"
+        android:textSize="18sp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintVertical_bias="0.25"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <Button
         android:id="@+id/button_try_again"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:text="@string/try_again_button"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="@id/tv_empty_list_message"
         app:layout_constraintStart_toStartOf="@id/tv_empty_list_message"
         app:layout_constraintTop_toBottomOf="@id/tv_empty_list_message" />
 
+    <Button
+        android:id="@+id/button_create_contacts"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/create_contact_button"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@id/tv_empty_list_message"
+        app:layout_constraintStart_toStartOf="@id/tv_empty_list_message"
+        app:layout_constraintTop_toBottomOf="@id/button_try_again" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:orientation="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toTopOf="@id/button_delete_all_contacts"
+        app:layout_constraintTop_toTopOf="parent"
         tools:listitem="@layout/contact_item" />
+
+    <Button
+        android:id="@+id/button_delete_all_contacts"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="8dp"
+        android:text="@string/delete_all_contacts_button"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

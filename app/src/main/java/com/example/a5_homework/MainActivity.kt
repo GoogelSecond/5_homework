@@ -3,17 +3,21 @@ package com.example.a5_homework
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentContainerView
-import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.commit
 import androidx.lifecycle.lifecycleScope
+import com.example.a5_homework.model.ContactModel
 import com.example.a5_homework.screens.ContactEditFragment
 import com.example.a5_homework.screens.ContactListFragment
+import com.example.a5_homework.utils.ContactCreator
+import com.example.a5_homework.utils.ContactUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class MainActivity : AppCompatActivity(), Navigator {
+class MainActivity : AppCompatActivity(), Navigator, ContactManager {
     private var fragmentEditContact: FragmentContainerView? = null
+
+    private val contacts = mutableListOf<ContactModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,13 +27,6 @@ class MainActivity : AppCompatActivity(), Navigator {
 
         if (isOnePanelMode()) {
             if (savedInstanceState == null) {
-                lifecycleScope.launch {
-                    val list = withContext(Dispatchers.IO) {
-                        ContactCreator.crateContactList()
-                    }
-//                    ContactHelper.createContact(list[0], contentResolver)
-
-                }
                 openListScreen()
             }
         } else {
@@ -41,7 +38,7 @@ class MainActivity : AppCompatActivity(), Navigator {
     override fun openEditScreenOnePanelMode(id: String) {
         supportFragmentManager.commit {
             setReorderingAllowed(true)
-            addToBackStack(TRANSITION_NAME_EDIT_ONE_PANEL_MODE)
+            addToBackStack(null)
             replace(R.id.fragment_container, ContactEditFragment.newInstance(id))
         }
     }
@@ -79,7 +76,54 @@ class MainActivity : AppCompatActivity(), Navigator {
         }
     }
 
+    override fun createContacts(callback: () -> Unit) {
+        lifecycleScope.launch {
+            withContext(Dispatchers.IO) {
+                ContactCreator.crateContactList(COUNT_CONTACTS).forEach { contact ->
+                    ContactUtils.createContact(contact, contentResolver)
+                    withContext(Dispatchers.Main) {
+                        callback.invoke()
+                    }
+                }
+            }
+        }
+    }
+
+    override fun deleteContacts(callback: () -> Unit) {
+        lifecycleScope.launch {
+            withContext(Dispatchers.IO) {
+                ContactUtils.deleteAllContacts(contacts, contentResolver)
+                withContext(Dispatchers.Main) {
+                    contacts.clear()
+                    callback.invoke()
+                }
+            }
+        }
+    }
+
+    override fun updateContactList() {
+        contacts.clear()
+        val list = ContactUtils.getContacts(contentResolver)
+        contacts.addAll(list)
+    }
+
+    override fun loadContacts(): List<ContactModel> {
+        return contacts.toList()
+    }
+
+    override fun updateContact(contactModel: ContactModel) {
+        ContactUtils.updateContact(contactModel, contentResolver)
+    }
+
+    override fun getContactById(id: String): ContactModel {
+        return ContactUtils.getContactById(id, contentResolver)
+    }
+
+    override fun deleteContact(id: String) {
+        ContactUtils.deleteContact(id, contentResolver)
+    }
+
     companion object {
-        private const val TRANSITION_NAME_EDIT_ONE_PANEL_MODE = "edit"
+        private const val COUNT_CONTACTS = 100
     }
 }

@@ -1,4 +1,4 @@
-package com.example.a5_homework
+package com.example.a5_homework.utils
 
 import com.example.a5_homework.model.ContactCPModel
 import com.mooveit.library.Fakeit
@@ -9,12 +9,12 @@ import java.util.*
 
 object ContactCreator {
 
-    private const val PICTURES_URL = "https://picsum.photos/200/300"
+    private const val PICTURES_URL = "https://picsum.photos/200/200"
 
-    fun crateContactList(): List<ContactCPModel> {
+    fun crateContactList(count: Int): List<ContactCPModel> {
         Fakeit.initWithLocale(Locale.ENGLISH)
         val result = mutableListOf<ContactCPModel>()
-        for (i in 0 until 10) {
+        for (i in 0 until count) {
             result.add(
                 ContactCPModel(
                     imageByteArray = getImageBytes(PICTURES_URL),

@@ -5,8 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.a5_homework.ContactHelper
 import com.example.a5_homework.R
+import com.example.a5_homework.contactManager
 import com.example.a5_homework.databinding.ContactEditFragmentBinding
 import com.example.a5_homework.model.ContactModel
 import com.example.a5_homework.navigator
@@ -32,7 +32,7 @@ class ContactEditFragment : Fragment(R.layout.contact_list_fragment) {
         val id = args?.getString(KEY_ID)
 
         id?.let {
-            val contactModel = ContactHelper.getContactById(it, requireContext().contentResolver)
+            val contactModel = contactManager().getContactById(it)
             binding.etFirstName.setText(contactModel.firstName)
             binding.etLastName.setText(contactModel.lastName)
             binding.etPhoneNumber.setText(contactModel.phoneNumber)
@@ -40,13 +40,13 @@ class ContactEditFragment : Fragment(R.layout.contact_list_fragment) {
 
         binding.buttonSave.setOnClickListener {
             id?.let { id ->
-                ContactHelper.updateContact(
+                contactManager().updateContact(
                     ContactModel(
                         id = id,
                         firstName = binding.etFirstName.text.toString(),
                         lastName = binding.etLastName.text.toString(),
                         phoneNumber = binding.etPhoneNumber.text.toString()
-                    ), requireContext().contentResolver
+                    )
                 )
                 navigator().popBackstack()
                 navigator().openListScreen()

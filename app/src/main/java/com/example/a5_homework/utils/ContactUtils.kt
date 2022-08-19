@@ -1,4 +1,4 @@
-package com.example.a5_homework
+package com.example.a5_homework.utils
 
 import android.content.ContentProviderOperation
 import android.content.ContentResolver
@@ -9,7 +9,7 @@ import android.provider.ContactsContract.CommonDataKinds
 import com.example.a5_homework.model.ContactCPModel
 import com.example.a5_homework.model.ContactModel
 
-object ContactHelper {
+object ContactUtils {
 
     fun createContact(contactModel: ContactCPModel, contentResolver: ContentResolver) {
         val ops = ArrayList<ContentProviderOperation>()

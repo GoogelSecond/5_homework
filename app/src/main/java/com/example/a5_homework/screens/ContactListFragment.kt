@@ -68,8 +68,7 @@ class ContactListFragment : Fragment(R.layout.contact_list_fragment) {
     }
 
     private fun onReadAndWriteContactsPermissionsGranted() {
-        val contactList = ContactHelper.getContacts(requireContext().contentResolver)
-        checkEmptyListContacts(contactList)
+        updateUi()
     }
 
     private fun openEditScreen(id: String) {
@@ -84,9 +83,15 @@ class ContactListFragment : Fragment(R.layout.contact_list_fragment) {
         SingleDialogFragment.show(parentFragmentManager)
         SingleDialogFragment.setupListener(parentFragmentManager, this) { answer ->
             if (answer) {
-                Snackbar.make(binding.root, "positive answer", Snackbar.LENGTH_SHORT).show()
+                ContactHelper.deleteContact(id, requireContext().contentResolver)
+                updateUi()
             }
         }
+    }
+
+    private fun updateUi() {
+        val contactList = ContactHelper.getContacts(requireContext().contentResolver)
+        checkEmptyListContacts(contactList)
     }
 
     private fun checkEmptyListContacts(contactList: List<ContactModel>) {

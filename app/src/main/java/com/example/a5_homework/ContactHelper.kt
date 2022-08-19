@@ -2,6 +2,7 @@ package com.example.a5_homework
 
 import android.content.ContentProviderOperation
 import android.content.ContentResolver
+import android.content.Context
 import android.provider.ContactsContract
 import android.provider.ContactsContract.CommonDataKinds
 import com.example.a5_homework.model.ContactModel
@@ -122,6 +123,18 @@ object ContactHelper {
                 .build()
         )
 
+        contentResolver.applyBatch(ContactsContract.AUTHORITY, ops)
+    }
+
+    fun deleteContact(id: String, contentResolver: ContentResolver) {
+        val ops = ArrayList<ContentProviderOperation>()
+        val selection = "${ContactsContract.RawContacts.CONTACT_ID}=?"
+        val selectionArgs = arrayOf(id)
+        ops.add(
+            ContentProviderOperation.newDelete(ContactsContract.RawContacts.CONTENT_URI)
+                .withSelection(selection, selectionArgs)
+                .build()
+        )
         contentResolver.applyBatch(ContactsContract.AUTHORITY, ops)
     }
 

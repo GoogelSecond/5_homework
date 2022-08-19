@@ -5,14 +5,27 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/tv_first_name_title"
+    <ImageView
+        android:id="@+id/iv_contact_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="@string/first_name_title"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:background="#B3B3B3"
+        tools:ignore="ContentDescription"
+        tools:layout_height="100dp"
+        tools:layout_width="100dp" />
+
+    <TextView
+        android:id="@+id/tv_first_name_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="@string/first_name_title"
+        app:layout_constraintBottom_toTopOf="@+id/tv_last_name_title"
+        app:layout_constraintStart_toEndOf="@id/iv_contact_image"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -34,8 +47,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="@string/last_name_title"
+        app:layout_constraintBottom_toTopOf="@+id/tv_phone_number_title"
         app:layout_constraintStart_toStartOf="@id/tv_first_name_title"
-        app:layout_constraintTop_toBottomOf="@id/tv_first_name_title" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_first_name_title" />
 
     <TextView
         android:id="@+id/tv_last_name"
@@ -56,8 +70,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="@string/phone_number_title"
+        app:layout_constraintBottom_toBottomOf="@id/iv_contact_image"
         app:layout_constraintStart_toStartOf="@id/tv_first_name_title"
-        app:layout_constraintTop_toBottomOf="@id/tv_last_name_title" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_last_name_title" />
 
     <TextView
         android:id="@+id/tv_phone_number"
@@ -71,15 +86,5 @@
         app:layout_constraintStart_toEndOf="@id/tv_phone_number_title"
         app:layout_constraintTop_toTopOf="@id/tv_phone_number_title"
         tools:text="123456789" />
-
-    <com.google.android.material.divider.MaterialDivider
-        android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        app:dividerColor="@android:color/darker_gray"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@id/tv_first_name_title"
-        app:layout_constraintTop_toBottomOf="@id/tv_phone_number_title" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

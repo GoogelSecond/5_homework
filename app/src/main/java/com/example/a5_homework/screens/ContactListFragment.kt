@@ -84,6 +84,7 @@ class ContactListFragment : Fragment(R.layout.contact_list_fragment) {
         SingleDialogFragment.setupListener(parentFragmentManager, this) { answer ->
             if (answer) {
                 ContactHelper.deleteContact(id, requireContext().contentResolver)
+                navigator().clearEditScreenFragment()
                 updateUi()
             }
         }

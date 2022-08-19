@@ -27,15 +27,13 @@ class MainActivity : AppCompatActivity(), Navigator {
                     val list = withContext(Dispatchers.IO) {
                         ContactCreator.crateContactList()
                     }
-                    ContactHelper.createContact(list[0], contentResolver)
+//                    ContactHelper.createContact(list[0], contentResolver)
+
                 }
                 openListScreen()
             }
         } else {
-            supportFragmentManager.popBackStack(
-                TRANSITION_NAME_EDIT_ONE_PANEL_MODE,
-                FragmentManager.POP_BACK_STACK_INCLUSIVE
-            )
+            popBackstack()
             openListScreen()
         }
     }
@@ -68,6 +66,17 @@ class MainActivity : AppCompatActivity(), Navigator {
 
     override fun popBackstack() {
         supportFragmentManager.popBackStack()
+    }
+
+    override fun clearEditScreenFragment() {
+        val editFragment = supportFragmentManager
+            .findFragmentById(R.id.fragment_container_edit_contact)
+
+        editFragment?.let {
+            supportFragmentManager.commit {
+                remove(editFragment)
+            }
+        }
     }
 
     companion object {

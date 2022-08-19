@@ -9,10 +9,12 @@ import java.util.*
 
 object ContactCreator {
 
+    private const val PICTURES_URL = "https://picsum.photos/200/300"
+
     fun crateContactList(): List<ContactCPModel> {
         Fakeit.initWithLocale(Locale.ENGLISH)
         val result = mutableListOf<ContactCPModel>()
-        for (i in 0..10) {
+        for (i in 0 until 10) {
             result.add(
                 ContactCPModel(
                     imageByteArray = getImageBytes(PICTURES_URL),
@@ -29,17 +31,21 @@ object ContactCreator {
     private fun getImageBytes(imageUrl: String): ByteArray? {
         val url = URL(imageUrl)
         val output = ByteArrayOutputStream()
-        url.openStream().use { stream ->
-            val buffer = ByteArray(4096)
-            while (true) {
-                val bytesRead: Int = stream.read(buffer)
-                if (bytesRead < 0) {
-                    break
+        try {
+            url.openStream().use { stream ->
+                val buffer = ByteArray(4096)
+                while (true) {
+                    val bytesRead: Int = stream.read(buffer)
+                    if (bytesRead < 0) {
+                        break
+                    }
+                    output.write(buffer, 0, bytesRead)
                 }
-                output.write(buffer, 0, bytesRead)
             }
+        } catch (e: IOException) {
+            return null
         }
+
         return output.toByteArray()
     }
-    const val PICTURES_URL = "https://picsum.photos/200/300"
 }

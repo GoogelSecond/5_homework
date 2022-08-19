@@ -6,4 +6,7 @@
     <string name="save_button">save</string>
     <string name="contact_list_is_empty_message">Contact list is empty</string>
     <string name="try_again_button">load contacts</string>
+    <string name="title_dialog">Удалить контакт?</string>
+    <string name="positive_button_dialog">Да</string>
+    <string name="negative_button_dialog">Нет</string>
 </resources>

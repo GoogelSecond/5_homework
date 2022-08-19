@@ -9,10 +9,12 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import com.example.a5_homework.ContactHelper
 import com.example.a5_homework.R
+import com.example.a5_homework.SingleDialogFragment
 import com.example.a5_homework.databinding.ContactListFragmentBinding
 import com.example.a5_homework.model.ContactModel
 import com.example.a5_homework.navigator
 import com.example.a5_homework.screens.recycler.ContactAdapter
+import com.google.android.material.snackbar.Snackbar
 
 
 class ContactListFragment : Fragment(R.layout.contact_list_fragment) {
@@ -53,13 +55,9 @@ class ContactListFragment : Fragment(R.layout.contact_list_fragment) {
 
     private fun setupRecycler() {
         val recycler = binding.recyclerView
-        contactAdapter = ContactAdapter { id ->
-            if (navigator().isOnePanelMode()) {
-                navigator().openEditScreenOnePanelMode(id)
-            } else {
-                navigator().openEditScreenTwoPanelMode(id)
-            }
-        }
+        contactAdapter = ContactAdapter(
+            onContactClickListener = { id -> openEditScreen(id) },
+            onLongClickListener = { id -> removeContact(id) })
         recycler.adapter = contactAdapter
     }
 
@@ -72,6 +70,23 @@ class ContactListFragment : Fragment(R.layout.contact_list_fragment) {
     private fun onReadAndWriteContactsPermissionsGranted() {
         val contactList = ContactHelper.getContacts(requireContext().contentResolver)
         checkEmptyListContacts(contactList)
+    }
+
+    private fun openEditScreen(id: String) {
+        if (navigator().isOnePanelMode()) {
+            navigator().openEditScreenOnePanelMode(id)
+        } else {
+            navigator().openEditScreenTwoPanelMode(id)
+        }
+    }
+
+    private fun removeContact(id: String) {
+        SingleDialogFragment.show(parentFragmentManager)
+        SingleDialogFragment.setupListener(parentFragmentManager, this) { answer ->
+            if (answer) {
+                Snackbar.make(binding.root, "positive answer", Snackbar.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun checkEmptyListContacts(contactList: List<ContactModel>) {

@@ -38,8 +38,12 @@ android {
 dependencies {
     def fragment_version = "1.5.2"
 
-    implementation "androidx.fragment:fragment-ktx:$fragment_version"
+    implementation 'com.github.moove-it:fakeit:v0.7'
 
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1'
+
+
+    implementation "androidx.fragment:fragment-ktx:$fragment_version"
     implementation 'androidx.core:core-ktx:1.8.0'
     implementation 'androidx.appcompat:appcompat:1.5.0'
     implementation 'com.google.android.material:material:1.6.1'

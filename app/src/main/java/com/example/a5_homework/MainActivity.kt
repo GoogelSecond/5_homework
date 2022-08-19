@@ -5,8 +5,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.commit
+import androidx.lifecycle.lifecycleScope
 import com.example.a5_homework.screens.ContactEditFragment
 import com.example.a5_homework.screens.ContactListFragment
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MainActivity : AppCompatActivity(), Navigator {
     private var fragmentEditContact: FragmentContainerView? = null
@@ -19,6 +23,12 @@ class MainActivity : AppCompatActivity(), Navigator {
 
         if (isOnePanelMode()) {
             if (savedInstanceState == null) {
+                lifecycleScope.launch {
+                    val list = withContext(Dispatchers.IO) {
+                        ContactCreator.crateContactList()
+                    }
+                    ContactHelper.createContact(list[0], contentResolver)
+                }
                 openListScreen()
             }
         } else {

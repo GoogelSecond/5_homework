@@ -2,6 +2,10 @@ package com.example.a5_homework.utils
 
 import com.example.a5_homework.model.ContactCPModel
 import com.mooveit.library.Fakeit
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.net.URL
@@ -11,11 +15,14 @@ object ContactCreator {
 
     private const val PICTURES_URL = "https://picsum.photos/200/200"
 
-    fun crateContactList(count: Int): List<ContactCPModel> {
+    init {
         Fakeit.initWithLocale(Locale.ENGLISH)
-        val result = mutableListOf<ContactCPModel>()
+    }
+
+    suspend fun crateContactList(count: Int): Flow<ContactCPModel> = flow {
+
         for (i in 0 until count) {
-            result.add(
+            emit(
                 ContactCPModel(
                     imageByteArray = getImageBytes(PICTURES_URL),
                     firstName = Fakeit.name().firstName(),
@@ -24,11 +31,10 @@ object ContactCreator {
                 )
             )
         }
-        return result
     }
 
     @Throws(IOException::class)
-    private fun getImageBytes(imageUrl: String): ByteArray? {
+    private suspend fun getImageBytes(imageUrl: String): ByteArray? = withContext(Dispatchers.IO) {
         val url = URL(imageUrl)
         val output = ByteArrayOutputStream()
         try {
@@ -43,9 +49,9 @@ object ContactCreator {
                 }
             }
         } catch (e: IOException) {
-            return null
+            return@withContext null
         }
 
-        return output.toByteArray()
+        output.toByteArray()
     }
 }

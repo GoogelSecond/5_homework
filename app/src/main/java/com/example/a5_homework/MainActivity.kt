@@ -78,14 +78,11 @@ class MainActivity : AppCompatActivity(), Navigator, ContactManager {
 
     override fun createContacts(callback: () -> Unit) {
         lifecycleScope.launch {
-            withContext(Dispatchers.IO) {
-                ContactCreator.crateContactList(COUNT_CONTACTS).forEach { contact ->
-                    ContactUtils.createContact(contact, contentResolver)
-                    withContext(Dispatchers.Main) {
-                        callback.invoke()
-                    }
-                }
+
+            ContactCreator.crateContactList(COUNT_CONTACTS).collect { contact ->
+                ContactUtils.createContact(contact, contentResolver)
             }
+            callback.invoke()
         }
     }
 
@@ -93,11 +90,9 @@ class MainActivity : AppCompatActivity(), Navigator, ContactManager {
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
                 ContactUtils.deleteAllContacts(contacts, contentResolver)
-                withContext(Dispatchers.Main) {
-                    contacts.clear()
-                    callback.invoke()
-                }
             }
+            contacts.clear()
+            callback.invoke()
         }
     }
 

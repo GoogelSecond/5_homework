@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import com.example.a5_homework.R
 import com.example.a5_homework.SingleDialogFragment
@@ -42,6 +43,7 @@ class ContactListFragment : Fragment(R.layout.contact_list_fragment) {
         setupButtons()
         lunchPermissionRequest()
         setupRecycler()
+        setupSearch()
     }
 
     private fun setupButtons() {
@@ -60,6 +62,7 @@ class ContactListFragment : Fragment(R.layout.contact_list_fragment) {
 
             contactManager().createContacts {
                 binding.progressBar.visibility = View.GONE
+                contactManager().updateContactList()
                 updateUi()
             }
         }
@@ -80,6 +83,19 @@ class ContactListFragment : Fragment(R.layout.contact_list_fragment) {
         recycler.adapter = contactAdapter
     }
 
+    private fun setupSearch() {
+        binding.etSearch.doOnTextChanged { text, start, before, count ->
+            contactManager().searchContacts(text.toString()) { isEmpty ->
+                if (isEmpty) {
+                    setEmptyResultState()
+                } else {
+                    setDefaultState()
+                }
+            }
+            contactAdapter.submitList(contactManager().loadContacts())
+        }
+    }
+
     private fun onGotReadAndWriteContactsPermissionsResult(grantResults: Map<String, Boolean>) {
         if (grantResults.entries.all { it.value }) {
             onReadAndWriteContactsPermissionsGranted()
@@ -89,6 +105,7 @@ class ContactListFragment : Fragment(R.layout.contact_list_fragment) {
     }
 
     private fun onReadAndWriteContactsPermissionsGranted() {
+        contactManager().updateContactList()
         updateUi()
     }
 
@@ -106,15 +123,14 @@ class ContactListFragment : Fragment(R.layout.contact_list_fragment) {
             if (answer) {
                 contactManager().deleteContact(id)
                 navigator().clearEditScreenFragment()
+                contactManager().updateContactList()
                 updateUi()
             }
         }
     }
 
     private fun updateUi() {
-        contactManager().updateContactList()
-        val contactList = contactManager().loadContacts()
-        checkEmptyListContacts(contactList)
+        checkEmptyListContacts(contactManager().loadContacts())
     }
 
     private fun checkEmptyListContacts(contactList: List<ContactModel>) {
@@ -122,8 +138,20 @@ class ContactListFragment : Fragment(R.layout.contact_list_fragment) {
             setEmptyListState()
         } else {
             setDefaultState()
-            contactAdapter.submitList(contactList)
         }
+        contactAdapter.submitList(contactList)
+    }
+
+    private fun setEmptyResultState() {
+        val text = getText(R.string.contact_list_is_empty_result_message)
+        binding.tvEmptyListMessage.text = text
+        binding.tvEmptyListMessage.visibility = View.VISIBLE
+        binding.recyclerView.visibility = View.GONE
+        binding.buttonTryAgain.visibility = View.GONE
+        binding.buttonCreateContacts.visibility = View.GONE
+        binding.buttonDeleteAllContacts.visibility = View.GONE
+
+        binding.etSearch.visibility = View.VISIBLE
     }
 
     private fun setDiscardedState() {
@@ -132,6 +160,8 @@ class ContactListFragment : Fragment(R.layout.contact_list_fragment) {
         binding.buttonTryAgain.visibility = View.VISIBLE
         binding.buttonCreateContacts.visibility = View.GONE
         binding.buttonDeleteAllContacts.visibility = View.GONE
+
+        binding.etSearch.visibility = View.GONE
     }
 
     private fun setDefaultState() {
@@ -140,14 +170,20 @@ class ContactListFragment : Fragment(R.layout.contact_list_fragment) {
         binding.buttonTryAgain.visibility = View.GONE
         binding.buttonCreateContacts.visibility = View.GONE
         binding.buttonDeleteAllContacts.visibility = View.VISIBLE
+
+        binding.etSearch.visibility = View.VISIBLE
     }
 
     private fun setEmptyListState() {
+        val text = getText(R.string.contact_list_is_empty_message)
+        binding.tvEmptyListMessage.text = text
         binding.tvEmptyListMessage.visibility = View.VISIBLE
         binding.recyclerView.visibility = View.GONE
         binding.buttonTryAgain.visibility = View.VISIBLE
         binding.buttonCreateContacts.visibility = View.VISIBLE
         binding.buttonDeleteAllContacts.visibility = View.GONE
+
+        binding.etSearch.visibility = View.GONE
     }
 
     companion object {

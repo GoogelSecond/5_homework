@@ -22,4 +22,6 @@ interface ContactManager {
     fun getContactById(id: String): ContactModel
 
     fun deleteContact(id: String)
+
+    fun searchContacts(text: String, isEmptyResult: (Boolean) -> Unit)
 }

@@ -118,6 +118,19 @@ class MainActivity : AppCompatActivity(), Navigator, ContactManager {
         ContactUtils.deleteContact(id, contentResolver)
     }
 
+    override fun searchContacts(text: String, isEmptyResult: (Boolean) -> Unit) {
+        val searchText = text.lowercase()
+        updateContactList()
+        val list = contacts.filter { searchText in it.firstName.lowercase() || searchText in it.lastName.lowercase() }
+        if (list.isEmpty()) {
+            isEmptyResult.invoke(true)
+        } else {
+            isEmptyResult.invoke(false)
+        }
+        contacts.clear()
+        contacts.addAll(list)
+    }
+
     companion object {
         private const val COUNT_CONTACTS = 100
     }

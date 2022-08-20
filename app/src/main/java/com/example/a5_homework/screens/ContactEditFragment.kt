@@ -8,20 +8,23 @@ import androidx.fragment.app.Fragment
 import com.example.a5_homework.R
 import com.example.a5_homework.contactManager
 import com.example.a5_homework.databinding.ContactEditFragmentBinding
+import com.example.a5_homework.databinding.ContactListFragmentBinding
 import com.example.a5_homework.model.ContactModel
 import com.example.a5_homework.navigator
 
 
 class ContactEditFragment : Fragment(R.layout.contact_list_fragment) {
 
-    private lateinit var binding: ContactEditFragmentBinding
+    private var _binding: ContactEditFragmentBinding? = null
+    private val binding: ContactEditFragmentBinding
+        get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = ContactEditFragmentBinding.inflate(inflater, container, false)
+        _binding = ContactEditFragmentBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -52,6 +55,11 @@ class ContactEditFragment : Fragment(R.layout.contact_list_fragment) {
                 navigator().openListScreen()
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 
     companion object {

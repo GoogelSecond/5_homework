@@ -5,5 +5,12 @@
     <string name="phone_number_title">Phone number:</string>
     <string name="save_button">save</string>
     <string name="contact_list_is_empty_message">Contact list is empty</string>
+    <string name="contact_list_is_empty_result_message">Search result is empty</string>
     <string name="try_again_button">load contacts</string>
+    <string name="title_dialog">Do you remove contact?</string>
+    <string name="positive_button_dialog">Yes</string>
+    <string name="negative_button_dialog">No</string>
+    <string name="delete_all_contacts_button">delete all contacts</string>
+    <string name="create_contact_button">create contacts</string>
+    <string name="enter_search_text_hint">Enter search text</string>
 </resources>

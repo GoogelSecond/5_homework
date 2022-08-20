@@ -17,4 +17,6 @@ interface Navigator {
     fun isOnePanelMode(): Boolean
 
     fun popBackstack()
+
+    fun clearEditScreenFragment()
 }

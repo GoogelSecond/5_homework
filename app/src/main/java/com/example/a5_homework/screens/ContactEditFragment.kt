@@ -5,23 +5,26 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.a5_homework.ContactHelper
 import com.example.a5_homework.R
+import com.example.a5_homework.contactManager
 import com.example.a5_homework.databinding.ContactEditFragmentBinding
+import com.example.a5_homework.databinding.ContactListFragmentBinding
 import com.example.a5_homework.model.ContactModel
 import com.example.a5_homework.navigator
 
 
 class ContactEditFragment : Fragment(R.layout.contact_list_fragment) {
 
-    private lateinit var binding: ContactEditFragmentBinding
+    private var _binding: ContactEditFragmentBinding? = null
+    private val binding: ContactEditFragmentBinding
+        get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = ContactEditFragmentBinding.inflate(inflater, container, false)
+        _binding = ContactEditFragmentBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -32,26 +35,31 @@ class ContactEditFragment : Fragment(R.layout.contact_list_fragment) {
         val id = args?.getString(KEY_ID)
 
         id?.let {
-            val contactModel = ContactHelper.getContactById(it, requireContext().contentResolver)
+            val contactModel = contactManager().getContactById(it)
             binding.etFirstName.setText(contactModel.firstName)
             binding.etLastName.setText(contactModel.lastName)
-            binding.etPhoneNumber.setText(contactModel.number)
+            binding.etPhoneNumber.setText(contactModel.phoneNumber)
         }
 
         binding.buttonSave.setOnClickListener {
             id?.let { id ->
-                ContactHelper.updateContact(
+                contactManager().updateContact(
                     ContactModel(
                         id = id,
                         firstName = binding.etFirstName.text.toString(),
                         lastName = binding.etLastName.text.toString(),
-                        number = binding.etPhoneNumber.text.toString()
-                    ), requireContext().contentResolver
+                        phoneNumber = binding.etPhoneNumber.text.toString()
+                    )
                 )
                 navigator().popBackstack()
                 navigator().openListScreen()
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 
     companion object {

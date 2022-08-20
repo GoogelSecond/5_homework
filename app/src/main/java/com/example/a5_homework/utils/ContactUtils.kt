@@ -1,13 +1,69 @@
-package com.example.a5_homework
+package com.example.a5_homework.utils
 
 import android.content.ContentProviderOperation
 import android.content.ContentResolver
+import android.content.ContentUris
+import android.net.Uri
 import android.provider.ContactsContract
 import android.provider.ContactsContract.CommonDataKinds
+import com.example.a5_homework.model.ContactCPModel
 import com.example.a5_homework.model.ContactModel
-import java.util.ArrayList
 
-object ContactHelper {
+object ContactUtils {
+
+    fun createContact(contactModel: ContactCPModel, contentResolver: ContentResolver) {
+        val ops = ArrayList<ContentProviderOperation>()
+        val rawContactInsertIndex = ops.size
+
+        ops.add(
+            ContentProviderOperation.newInsert(ContactsContract.RawContacts.CONTENT_URI)
+                .withValue(ContactsContract.RawContacts.ACCOUNT_TYPE, null)
+                .withValue(ContactsContract.RawContacts.ACCOUNT_NAME, null)
+                .build()
+        )
+
+        ops.add(
+            ContentProviderOperation
+                .newInsert(ContactsContract.Data.CONTENT_URI)
+                .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, rawContactInsertIndex)
+                .withValue(ContactsContract.Data.MIMETYPE, CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
+                .withValue(CommonDataKinds.Phone.NUMBER, contactModel.phoneNumber)
+                .withValue(ContactsContract.Data.MIMETYPE, CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
+                .withValue(CommonDataKinds.Phone.TYPE, CommonDataKinds.Phone.TYPE_MOBILE)
+                .build()
+        )
+
+        ops.add(
+            ContentProviderOperation
+                .newInsert(ContactsContract.Data.CONTENT_URI)
+                .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, rawContactInsertIndex)
+                .withValue(
+                    ContactsContract.Data.MIMETYPE,
+                    CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE
+                )
+                .withValue(CommonDataKinds.StructuredName.GIVEN_NAME, contactModel.firstName)
+                .withValue(CommonDataKinds.StructuredName.FAMILY_NAME, contactModel.lastName)
+                .build()
+        )
+
+        contactModel.imageByteArray?.let { imageByteArray ->
+            ops.add(
+                ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
+                    .withValueBackReference(
+                        ContactsContract.Data.RAW_CONTACT_ID,
+                        rawContactInsertIndex
+                    )
+                    .withValue(
+                        ContactsContract.Data.MIMETYPE,
+                        CommonDataKinds.Photo.CONTENT_ITEM_TYPE
+                    )
+                    .withValue(CommonDataKinds.Photo.PHOTO, imageByteArray)
+                    .build()
+            )
+        }
+
+        contentResolver.applyBatch(ContactsContract.AUTHORITY, ops)
+    }
 
     fun getContacts(contentResolver: ContentResolver): List<ContactModel> {
         val uri = ContactsContract.Data.CONTENT_URI
@@ -39,9 +95,10 @@ object ContactHelper {
                 result.add(
                     ContactModel(
                         id = id,
+                        imageUri = getPictureUri(id),
                         firstName = checkBlankString(firstName),
                         lastName = checkBlankString(lastName),
-                        number = checkBlankString(phoneNumber)
+                        phoneNumber = checkBlankString(phoneNumber)
                     )
                 )
             }
@@ -74,9 +131,10 @@ object ContactHelper {
 
                 contactModel = ContactModel(
                     id = id,
+                    imageUri = getPictureUri(id),
                     firstName = checkBlankString(firstName),
                     lastName = checkBlankString(lastName),
-                    number = checkBlankString(phoneNumber)
+                    phoneNumber = checkBlankString(phoneNumber)
                 )
             }
 
@@ -106,7 +164,7 @@ object ContactHelper {
         ops.add(
             ContentProviderOperation.newUpdate(ContactsContract.Data.CONTENT_URI)
                 .withSelection(phoneSelection, phoneSelectionArgs)
-                .withValue(CommonDataKinds.Phone.NUMBER, contactModel.number)
+                .withValue(CommonDataKinds.Phone.NUMBER, contactModel.phoneNumber)
                 .build()
         )
         ops.add(
@@ -122,6 +180,24 @@ object ContactHelper {
                 .build()
         )
 
+        contentResolver.applyBatch(ContactsContract.AUTHORITY, ops)
+    }
+
+    fun deleteAllContacts(list: List<ContactModel>, contentResolver: ContentResolver) {
+        list.forEach {
+            deleteContact(it.id, contentResolver)
+        }
+    }
+
+    fun deleteContact(id: String, contentResolver: ContentResolver) {
+        val ops = ArrayList<ContentProviderOperation>()
+        val selection = "${ContactsContract.RawContacts.CONTACT_ID}=?"
+        val selectionArgs = arrayOf(id)
+        ops.add(
+            ContentProviderOperation.newDelete(ContactsContract.RawContacts.CONTENT_URI)
+                .withSelection(selection, selectionArgs)
+                .build()
+        )
         contentResolver.applyBatch(ContactsContract.AUTHORITY, ops)
     }
 
@@ -149,6 +225,13 @@ object ContactHelper {
         }
 
         return EMPTY_STRING
+    }
+
+    private fun getPictureUri(id: String): Uri {
+        return Uri.withAppendedPath(
+            ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, id.toLong()),
+            ContactsContract.Contacts.Photo.CONTENT_DIRECTORY
+        )
     }
 
     private const val EMPTY_STRING = ""

@@ -6,8 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.RecyclerView
 import com.example.a5_homework.R
 import com.example.a5_homework.SingleDialogFragment
 import com.example.a5_homework.contactManager
@@ -81,6 +84,13 @@ class ContactListFragment : Fragment(R.layout.contact_list_fragment) {
             onLongClickListener = { id -> removeContact(id) }
         )
         recycler.adapter = contactAdapter
+
+        val dividerItemDecorator = DividerItemDecoration(requireContext(), RecyclerView.VERTICAL)
+
+        val divider = ContextCompat.getDrawable(requireContext(), R.drawable.recycler_divider)
+        divider?.let { dividerItemDecorator.setDrawable(it) }
+
+        recycler.addItemDecoration(dividerItemDecorator)
     }
 
     private fun setupSearch() {
